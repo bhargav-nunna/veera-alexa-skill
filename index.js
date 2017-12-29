@@ -1,5 +1,4 @@
 var Alexa = require('alexa-sdk');
-var Data = require("./data");
 
 const skillName = "Veera DIY Home Automation";
 
