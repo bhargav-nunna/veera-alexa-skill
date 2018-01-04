@@ -1,23 +1,10 @@
 var Alexa = require('alexa-sdk');
+var http = require('http');
 
 const skillName = "Veera DIY Home Automation";
 
 var handlers = {
 
-    "LanguageIntent": function () {
-        function getRandomInt(min, max) {
-            return Math.floor(Math.random() * (max - min)) + min;
-        }
-        var speechOutput = "";
-        if(this.event.request.intent.slots.Language.value && this.event.request.intent.slots.Language.value.toLowerCase() == "java") {
-            speechOutput = Data.java[getRandomInt(0, 2)];
-        } else if(this.event.request.intent.slots.Language.value && this.event.request.intent.slots.Language.value.toLowerCase() == "ionic framework") {
-            speechOutput = Data.ionic[getRandomInt(0, 3)];
-        } else {
-            speechOutput = "I don't have anything interesting to share regarding what you've asked."
-        }
-        this.emit(':tellWithCard', speechOutput, skillName, speechOutput);
-    },
 
     "AboutIntent": function () {
         var speechOutput = "Veera is home automation assistant to help iot enthusiasts to build iot devices and integrat with Alexa quickly.";
@@ -27,9 +14,9 @@ var handlers = {
     "AMAZON.HelpIntent": function () {
         var speechOutput = "";
         speechOutput += "Here are some things you can say: ";
-        speechOutput += "Tell me something interesting about Java. ";
-        speechOutput += "Tell me about the skill developer. ";
-        speechOutput += "You can also say stop if you're done. ";
+        speechOutput += "Ask Veera to Switch on Bedroom Lights. ";
+        speechOutput += "Ask Veera to Power off Bedroom Fan. ";
+        speechOutput += "Ask Veera to Turn on bedroom all devices. ";
         speechOutput += "So how can I help?";
         this.emit(':ask', speechOutput, speechOutput);
     },
@@ -47,7 +34,8 @@ var handlers = {
     "LaunchRequest": function () {
         var speechText = "";
         speechText += "Welcome to " + skillName + ". ";
-        speechText += "You can ask Veera to manage your home applicances. ";
+        speechText += "You can ask Veera to manage your home appliances. ";
+        speechText += "You can say Hey Alexa ask Veera to Turn on bedroom lights. ";
         this.emit(':tell', speechText);
     },
     "TurnOn": function () {
@@ -55,13 +43,30 @@ var handlers = {
         var area = intentObj.slots.Area.value;
         var device = intentObj.slots.Device.value;
         var speechText = "";
-        speechText += "Welcome to " + skillName + ". ";
-        speechText += "You can ask Veera to manage your home applicances.";
-        speechText += "Did you mean turn on" + area + device;
-        this.emit(':tell', speechText);
+
+        //send Request to my Raspberry pi running on my home network.
+
+        http.get('http://xyz/LightOn', (resp) => {  //URL has been masked for saftey and privacy.
+
+            let data = '';
+            //A Chunk of data has been received.
+            resp.on('data', (chunk) => {
+                data += chunk;
+            });
+            resp.on('end', () =>{
+                //Do nothing for now.
+            });
+        }).on("error", (err) =>{
+            //Do nothing for now.
+        });
+
+        speechText = "Turning on " + area +" "+device;
+        this.emit(':tell', speechText);     
     }
 
 };
+
+
 
 exports.handler = function (event, context) {
     var alexa = Alexa.handler(event, context);
