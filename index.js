@@ -52,8 +52,8 @@ var handlers = {
     },
     "TurnOn": function () {
         var intentObj = this.event.request.intent;
-        var area = intentObj.slots.Area;
-        var device = intentObj.slots.Device;
+        var area = intentObj.slots.Area.value;
+        var device = intentObj.slots.Device.value;
         var speechText = "";
         speechText += "Welcome to " + skillName + ". ";
         speechText += "You can ask Veera to manage your home applicances.";
