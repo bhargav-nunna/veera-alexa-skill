@@ -20,7 +20,7 @@ var handlers = {
     },
 
     "AboutIntent": function () {
-        var speechOutput = "The Polyglot Developer, Nic Raboy, is from San Francisco, California";
+        var speechOutput = "Veera is home automation assistant to help iot enthusiasts to build iot devices and integrat with Alexa quickly.";
         this.emit(':tellWithCard', speechOutput, skillName, speechOutput);
     },
 
