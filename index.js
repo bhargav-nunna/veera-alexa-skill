@@ -47,16 +47,18 @@ var handlers = {
     "LaunchRequest": function () {
         var speechText = "";
         speechText += "Welcome to " + skillName + ". ";
-        speechText += "You can ask a question like, tell me something interesting about Java. ";
-        var repromptText = "For instructions on what you can say, please say help me.";
-        this.emit(':ask', speechText, repromptText);
+        speechText += "You can ask Veera to manage your home applicances. ";
+        this.emit(':tell', speechText);
     },
     "TurnOn": function () {
+        var intentObj = this.event.request.intent;
+        var area = intentObj.slots.Area;
+        var device = intentObj.slots.Device;
         var speechText = "";
         speechText += "Welcome to " + skillName + ". ";
-        speechText += "You can ask a question like, tell me something interesting about Java. ";
-        var repromptText = "For instructions on what you can say, please say help me.";
-        this.emit(':ask', speechText, repromptText);
+        speechText += "You can ask Veera to manage your home applicances.";
+        speechText += "Did you mean turn on" + area + device;
+        this.emit(':tell', speechText);
     }
 
 };
