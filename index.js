@@ -3,6 +3,8 @@ var http = require('http');
 
 const skillName = "Veera DIY Home Automation";
 
+var raspConnectionURL = "http://xx.xx.xx.xx";  //Masked for security reasons. Since this code is on public repo.
+
 var handlers = {
 
 
@@ -46,21 +48,80 @@ var handlers = {
 
         //send Request to my Raspberry pi running on my home network.
 
-        http.get('http://xyz/LightOn', (resp) => {  //URL has been masked for saftey and privacy.
+        http.get(raspConnectionURL+'LightOn', (resp) => {  //URL has been masked for saftey and privacy.
 
             let data = '';
             //A Chunk of data has been received.
             resp.on('data', (chunk) => {
                 data += chunk;
+                console.log(data);
             });
             resp.on('end', () =>{
                 //Do nothing for now.
+                console.log("inside end");
             });
         }).on("error", (err) =>{
             //Do nothing for now.
+            console.log(err);
         });
 
         speechText = "Turning on " + area +" "+device;
+        this.emit(':tell', speechText);     
+    },
+    "TurnOff": function () {
+        var intentObj = this.event.request.intent;
+        var area = intentObj.slots.Area.value;
+        var device = intentObj.slots.Device.value;
+        var speechText = "";
+
+        //send Request to my Raspberry pi running on my home network.
+
+        http.get(raspConnectionURL+'/LightOff', (resp) => {  //URL has been masked for saftey and privacy.
+
+            let data = '';
+            //A Chunk of data has been received.
+            resp.on('data', (chunk) => {
+                data += chunk;
+                console.log(data);
+            });
+            resp.on('end', () =>{
+                //Do nothing for now.
+                console.log("inside end");
+            });
+        }).on("error", (err) =>{
+            //Do nothing for now.
+            console.log(err);
+        });
+
+        speechText = "Turning off " + area +" "+device;
+        this.emit(':tell', speechText);     
+    },
+    "Status": function () {
+        var intentObj = this.event.request.intent;
+        var area = intentObj.slots.Area.value;
+        var device = intentObj.slots.Device.value;
+        var speechText = "";
+        var status = "off";
+        //send Request to my Raspberry pi running on my home network.
+
+        http.get(raspConnectionURL+'/Status', (resp) => {  //URL has been masked for saftey and privacy.
+
+            let data = '';
+            //A Chunk of data has been received.
+            resp.on('data', (chunk) => {
+                data += chunk;
+                console.log(data);
+            });
+            resp.on('end', () =>{
+                //Do nothing for now.
+                console.log("inside end");
+            });
+        }).on("error", (err) =>{
+            //Do nothing for now.
+            console.log(err);
+        });
+
+        speechText = "Status of " + area +" "+device+" is "+status;
         this.emit(':tell', speechText);     
     }
 
